@@ -31,8 +31,8 @@ export default function RegistrationScreen({ navigation }) {
         usersRef
           .doc(uid)
           .set(data)
-          .then(() => {
-            navigation.navigate('Home', { user: data });
+          .then(async () => {
+            await navigation.navigate('Home', { user: data });
           })
           .catch((error) => {
             alert(error);

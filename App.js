@@ -5,8 +5,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './App/screens/LoginScreen';
 import RegistrationScreen from './App/screens/RegistrationScreen';
 import HomeScreen from './App/screens/HomeScreen';
+import NewRoomScreen from './App/screens/NewRoomScreen';
 import { decode, encode } from 'base-64';
 import { firebase } from './src/firebase/config';
+import { YellowBox } from 'react-native';
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -17,6 +19,7 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 export default function App() {
+  YellowBox.ignoreWarnings(['Setting a timer']);
   useEffect(() => {
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged((user) => {
@@ -49,9 +52,18 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {user ? (
-          <Stack.Screen name="Home">
-            {(props) => <HomeScreen name="Home" {...props} extraData={user} />}
-          </Stack.Screen>
+          <>
+            <Stack.Screen name="Home">
+              {(props) => (
+                <HomeScreen name="Home" {...props} extraData={user} />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="NewRoom">
+              {(props) => (
+                <NewRoomScreen name="NewRoom" {...props} extraData={user} />
+              )}
+            </Stack.Screen>
+          </>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
