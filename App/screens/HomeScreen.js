@@ -34,6 +34,9 @@ export default function HomeScreen(props) {
       <View style={styles.firstBox}>
         <Text style={styles.buttonText}>Here can be your ad</Text>
       </View>
+      <View style={styles.firstBox}>
+        <Text style={styles.buttonText}>Here can be your ad</Text>
+      </View>
       <View style={styles.formContainer}>
         <TouchableOpacity
           style={styles.newRoomButton}

@@ -14,92 +14,67 @@ import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
 
 export default function NewRoomScreen(props) {
-  // const [gameRooms, setGameRooms] = useState ('');
   const [gameRoomName, setGameRoomName] = useState('');
   const [questionStart, setQuestionStart] = useState('');
   const [questionEnd, setQuestionEnd] = useState('');
   const [gameRoomId, setGameRoomId] = useState('');
   const [id, setId] = useState('');
-
   const navigation = useNavigation();
   const gameRoomRef = firebase.firestore().collection('gameRooms');
-  const roomMemberJunctionRef = firebase
-    .firestore()
-    .collection('RoomMemberJunction');
+  // const roomMemberJunctionRef = firebase
+  //   .firestore()
+  //   .colltection('RoomMemberJunction');
   const userID = props.extraData.id;
-  const userFullName = props.extraData.fullName;
-  const gameRoomsId = props.extraData.gameRoomsId;
-
-  // useEffect(() => {
-  //   gameRoomRef
-  //     .where('creator', '==', userID)
-  //     .orderBy('name')
-  //     .onSnapshot(
-  //       (querySnapshot) => {
-  //         const newGameRoomes = [];
-  //         querySnapshot.forEach((doc) => {
-  //           const entity = doc.data();
-  //           entity.id = doc.id;
-  //           newGameRooms.push(entity);
-  //         });
-  //         setGameRooms(newGameRooms);
-  //       },
-  //       (error) => {
-  //         console.log(error);
-  //       },
-  //     );
-  // }, []);
 
   const onCreateRoom = () => {
-    if (gameRoomName && gameRoomName.length > 0) {
-      const data = {
-        name: gameRoomName,
-        questionStart: questionStart,
-        questionEnd: questionEnd,
-        creator: userID,
-      };
-      gameRoomRef
-        .add(data)
-        .then(() => {
-          setGameRoomName('');
-          setQuestionStart('');
-          setQuestionEnd('');
-          setId('');
-        })
-        .catch((error) => {
-          alert(error);
-        });
+    if (gameRoomName && gameRoomName.length <= 0) {
+      alert('Enter a name');
+      return;
     }
-
-    //   roomMemberJunctionRef
-
-    //     .add(dataJunction)
-    //     .then(async () => {
-    //       await setGameRoomId('');
-    //     })
-    //     .catch((error) => {
-    //       alert(error);
-    //     });
-    // }
-    // console.log(gameRoomsId);
+    const data = {
+      name: gameRoomName,
+      questionStart: questionStart,
+      questionEnd: questionEnd,
+      creator: userID,
+    };
+    gameRoomRef
+      .add(data)
+      .then((response) => {
+        firebase.firestore().collection('gameRooms').doc(response.id).update({
+          id: response.id,
+        });
+        firebase
+          .firestore()
+          .collection('RoomMemberJunction')
+          .add({ gameRoomId: response.id, userId: userID })
+          .then((res) => {
+            firebase
+              .firestore()
+              .collection('RoomMemberJunction')
+              .doc(res.id)
+              .update({
+                id: res.id,
+              });
+          });
+      })
+      .catch((error) => {
+        alert(error);
+      });
+    // roomMemberJunctionRef
+    //   .add({ gameRoomId: id, userId: userID })
+    //   .then((response) => {
+    //     firebase
+    //       .firestore()
+    //       .collection('RoomMemberJunction')
+    //       .doc(response.id)
+    //       .update({
+    //         id: response.id,
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     alert(error);
+    //   });
   };
-
-  // const logOutPress = () => {
-  //   firebase.auth().signOut();
-  // navigation.navigate('Login'); // <== This will signout from firebase
-
-  // this.props.navigation.navigate('Login'); // <== We navigate to the loading screen we set earlier, which will check if there is a userId and navigate accordingly
-  // };
-
-  // const renderEntity = ({ item, index }) => {
-  //   return (
-  //     <View style={styles.entityContainer}>
-  //       <Text style={styles.entityText}>
-  //         {index}. {item.text}
-  //       </Text>
-  //     </View>
-  //   );
-  // };
 
   return (
     <View style={styles.container}>
