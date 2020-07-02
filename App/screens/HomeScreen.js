@@ -15,13 +15,52 @@ import { useNavigation } from '@react-navigation/native';
 export default function HomeScreen(props) {
   const userFullName = props.extraData.fullName;
   const navigation = useNavigation();
+  const junctionRef = firebase.firestore().collection('RoomMemberJunction');
+  const userID = props.extraData.id;
 
   const logOutPress = () => {
     firebase.auth().signOut();
     navigation.navigate('Login'); // <== This will signout from firebase
-
-    // this.props.navigation.navigate('Login'); // <== We navigate to the loading screen we set earlier, which will check if there is a userId and navigate accordingly
   };
+
+  // const snapshot = junctionRef.where('userId', '==', userID).get();
+  // if (snapshot.empty) {
+  //   console.log('No matching documents.');
+  //   return;
+  // }
+
+  // snapshot.forEach((doc) => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+  // const getGameRooms = (id, userId) => {
+  //   junctionRef
+  //     .get(id)
+  //     .where(userId === userID)
+  //     .then((response) => {
+  //       return response;
+  //       console.log(response);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   junctionRef
+  //     .where('userId', '==', userID)
+  //     .orderBy('id')
+  //     .onSnapshot(
+  //       (querySnapshot) => {
+  //         const newEntities = [];
+  //         querySnapshot.forEach((doc) => {
+  //           const entity = doc.data();
+  //           entity.id = doc.id;
+  //           newEntities.push(entity);
+  //         });
+  //         setWordList(newEntities);
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       },
+  //     );
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -35,7 +74,7 @@ export default function HomeScreen(props) {
         <Text style={styles.buttonText}>Here can be your ad</Text>
       </View>
       <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>Here can be your ad</Text>
+        <Text style={styles.buttonText}>test</Text>
       </View>
       <View style={styles.formContainer}>
         <TouchableOpacity

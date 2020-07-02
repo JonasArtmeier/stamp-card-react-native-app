@@ -60,20 +60,6 @@ export default function NewRoomScreen(props) {
       .catch((error) => {
         alert(error);
       });
-    // roomMemberJunctionRef
-    //   .add({ gameRoomId: id, userId: userID })
-    //   .then((response) => {
-    //     firebase
-    //       .firestore()
-    //       .collection('RoomMemberJunction')
-    //       .doc(response.id)
-    //       .update({
-    //         id: response.id,
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     alert(error);
-    //   });
   };
 
   return (
