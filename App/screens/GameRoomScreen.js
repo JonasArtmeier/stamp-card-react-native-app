@@ -13,20 +13,55 @@ import { firebase } from '../../src/firebase/config';
 import { useNavigation } from '@react-navigation/native';
 import GameRooms from '../components/GameRooms';
 
-export default function HomeScreen(props) {
+export default function GameRoomScreen(props) {
   const userFullName = props.extraData.fullName;
   const navigation = useNavigation();
   const junctionRef = firebase.firestore().collection('RoomMemberJunction');
   const userID = props.extraData.id;
-  const gameRoomData = props.extraData1;
-  const onGameRoomPress = () => {
-    navigation.navigate('GameRoom', { gameRoom: gameRoomData });
-  };
 
   const logOutPress = () => {
     firebase.auth().signOut();
     navigation.navigate('Login'); // <== This will signout from firebase
   };
+
+  // const snapshot = junctionRef.where('userId', '==', userID).get(
+  // if (snapshot.empty) {
+  //   console.log('No matching documents.');
+  //   return;
+  // }
+
+  // snapshot.forEach((doc) => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+  // const getGameRooms = (id, userId) => {
+  //   junctionRef
+  //     .get(id)
+  //     .where(userId === userID)
+  //     .then((response) => {
+  //       return response;
+  //       console.log(response);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   junctionRef
+  //     .where('userId', '==', userID)
+  //     .orderBy('id')
+  //     .onSnapshot(
+  //       (querySnapshot) => {
+  //         const newEntities = [];
+  //         querySnapshot.forEach((doc) => {
+  //           const entity = doc.data();
+  //           entity.id = doc.id;
+  //           newEntities.push(entity);
+  //         });
+  //         setWordList(newEntities);
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       },
+  //     );
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -40,28 +75,7 @@ export default function HomeScreen(props) {
         <Text style={styles.buttonText}>Here can be your ad</Text>
       </View>
       <View style={styles.formContainer}>
-        {/* <GameRooms userID={userID} /> */}
-        <FlatList
-          data={gameRoomData}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                height: 50,
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {gameRoomData !== undefined ? (
-                <Text onPress={onGameRoomPress}>
-                  Game Room Name: {item.name}
-                </Text>
-              ) : (
-                <Text>No Game Room</Text>
-              )}
-            </View>
-          )}
-        />
+        <GameRooms userID={userID} />
       </View>
       <View style={styles.firstBox}>
         <Text style={styles.buttonText}>test</Text>

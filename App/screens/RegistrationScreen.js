@@ -11,6 +11,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { firebase } from '../../src/firebase/config';
 
 export default function RegistrationScreen({ navigation }) {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   /// onRegisterPress function ///
   const onRegisterPress = () => {
     if (password !== confirmPassword) {
@@ -24,8 +28,8 @@ export default function RegistrationScreen({ navigation }) {
         const uid = response.user.uid;
         const data = {
           id: uid,
-          email,
-          fullName,
+          email: email,
+          fullName: fullName,
         };
         const usersRef = firebase.firestore().collection('users');
         usersRef
@@ -43,11 +47,6 @@ export default function RegistrationScreen({ navigation }) {
       });
   };
   /// onRegisterPress end///
-
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
