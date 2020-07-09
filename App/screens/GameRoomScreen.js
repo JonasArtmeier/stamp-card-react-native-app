@@ -12,10 +12,14 @@ import { firebase } from '../../src/firebase/config';
 // import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
 import GameRooms from '../components/GameRooms';
+// import myGameRoom from '../screens/HomeScreen';
 
 export default function GameRoomScreen(props) {
   const userFullName = props.extraData.fullName;
+  // const route = route();
   const navigation = useNavigation();
+  const theGameRoom = navigation.getParam('myGameRoom');
+  // const route = route();
   const junctionRef = firebase.firestore().collection('RoomMemberJunction');
   const userID = props.extraData.id;
 
@@ -23,7 +27,7 @@ export default function GameRoomScreen(props) {
     firebase.auth().signOut();
     navigation.navigate('Login'); // <== This will signout from firebase
   };
-
+  console.log('extradata', theGameRoom);
   // const snapshot = junctionRef.where('userId', '==', userID).get(
   // if (snapshot.empty) {
   //   console.log('No matching documents.');
@@ -67,8 +71,9 @@ export default function GameRoomScreen(props) {
     <View style={styles.container}>
       <View style={styles.firstBox}>
         <Text style={styles.buttonText}>
-          Welcome : {userFullName}
-          {'\n'} Statistics
+          Welcome to the Game Room
+          {/* {'\n'} */}
+          {/* {gameRoomName} */}
         </Text>
       </View>
       <View style={styles.firstBox}>

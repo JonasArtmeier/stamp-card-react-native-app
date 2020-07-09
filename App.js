@@ -106,6 +106,7 @@ export default function App() {
                 <GameRoomScreen
                   name="GameRoom"
                   {...props}
+                  extraData={user}
                   extraData1={gameRoomData}
                 />
               )}

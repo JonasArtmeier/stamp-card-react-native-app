@@ -11,7 +11,7 @@ import {
 import { firebase } from '../../src/firebase/config';
 // import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
-import GameRooms from '../components/GameRooms';
+import Footer from '../components/Footer';
 
 export default function HomeScreen(props) {
   const userFullName = props.extraData.fullName;
@@ -19,13 +19,16 @@ export default function HomeScreen(props) {
   const junctionRef = firebase.firestore().collection('RoomMemberJunction');
   const userID = props.extraData.id;
   const gameRoomData = props.extraData1;
-  const onGameRoomPress = () => {
-    navigation.navigate('GameRoom', { gameRoom: gameRoomData });
-  };
+  // const [myGameRoom, setMyGameRoom] = useState([]);
+  // const onGameRoomPress = (item) => {
+  //   alert('haha');
+  //   navigation.navigate('GameRoom', { gameRoom: item });
+  // console.log('items Data', item);
+  // };
 
   const logOutPress = () => {
     firebase.auth().signOut();
-    navigation.navigate('Login'); // <== This will signout from firebase
+    // navigation.navigate(''); // <== This will signout from firebase
   };
 
   return (
@@ -43,7 +46,7 @@ export default function HomeScreen(props) {
         {/* <GameRooms userID={userID} /> */}
         <FlatList
           data={gameRoomData}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View
               style={{
                 height: 50,
@@ -53,7 +56,13 @@ export default function HomeScreen(props) {
               }}
             >
               {gameRoomData !== undefined ? (
-                <Text onPress={onGameRoomPress}>
+                <Text
+                  onPress={() =>
+                    navigation.navigate('GameRoom', {
+                      myGameRoom: item,
+                    })
+                  }
+                >
                   Game Room Name: {item.name}
                 </Text>
               ) : (
@@ -79,6 +88,7 @@ export default function HomeScreen(props) {
           <Text>Logout</Text>
         </TouchableOpacity>
       </View>
+      <Footer />
     </View>
   );
 }
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 40,
     marginBottom: 20,
-    flex: 1,
+    flex: 3,
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 30,
