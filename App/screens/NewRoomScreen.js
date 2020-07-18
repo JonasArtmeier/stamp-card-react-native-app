@@ -12,6 +12,7 @@ import {
 import { firebase } from '../../src/firebase/config';
 import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
+import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 export default function NewRoomScreen(props) {
   const [gameRoomName, setGameRoomName] = useState('');

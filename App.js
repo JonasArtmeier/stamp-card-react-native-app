@@ -7,6 +7,9 @@ import RegistrationScreen from './App/screens/RegistrationScreen';
 import HomeScreen from './App/screens/HomeScreen';
 import NewRoomScreen from './App/screens/NewRoomScreen';
 import GameRoomScreen from './App/screens/GameRoomScreen';
+import NewQuestionScreen from './App/screens/NewQuestionScreen';
+import QuestionScreen from './App/screens/QuestionScreen';
+import InviteToGameRoomScreen from './App/screens/InviteToGameRoomScreen';
 import { decode, encode } from 'base-64';
 import { firebase } from './src/firebase/config';
 import { YellowBox } from 'react-native';
@@ -38,8 +41,8 @@ export default function App() {
           .catch((error) => {
             setLoading(false);
           });
-        /// test for game Room Data ////
-        console.log('id', user.uid);
+        /// Get Game Room Data ////
+        // console.log('id', user.uid);
         firebase
           .firestore()
           .collection('RoomMemberJunction')
@@ -55,30 +58,41 @@ export default function App() {
               .collection('gameRooms')
               .where('id', 'in', gameRoomIds)
               .get()
-              .then(async (snapshot) => {
+              .then((snapshot) => {
                 const gameRoomsData = snapshot.docs.map((document) => {
                   return document.data();
                 });
                 setGameRoomData(gameRoomsData);
-                // console.log(user.id);
               });
           });
 
-        /// test End ///
+        /// Question Data End ///
+        // firebase
+        //   .firestore()
+        //   .collection('questionUserAnswer')
+
+        //   .get()
+        //   .then((querySnapshot) => {
+        //     const questionAnswers = querySnapshot.docs.map((doc) => doc.data());
+        //     setQuestionAnswerData(questionAnswers);
+        //   });
       } else {
         setLoading(false);
       }
     });
   }, []);
 
+  // console.log(questionData)
+  // const [questionData, setQuestionData] = useState([])
   const [gameRoomData, setGameRoomData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  // const [questionAnswerData, setQuestionAnswerData] = useState([]);
 
   // if (loading) {
   //   return <></>;
   // }
-  console.log('gamesRooms', gameRoomData);
+  // console.log('gamesRooms', gameRoomData);
 
   return (
     <NavigationContainer>
@@ -101,10 +115,40 @@ export default function App() {
                 <NewRoomScreen name="NewRoom" {...props} extraData={user} />
               )}
             </Stack.Screen>
+            <Stack.Screen name="NewQuestion">
+              {(props) => (
+                <NewQuestionScreen
+                  name="NewQuestion"
+                  {...props}
+                  extraData={user}
+                />
+              )}
+            </Stack.Screen>
             <Stack.Screen name="GameRoom">
               {(props) => (
                 <GameRoomScreen
                   name="GameRoom"
+                  {...props}
+                  extraData={user}
+                  extraData1={gameRoomData}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Question">
+              {(props) => (
+                <QuestionScreen
+                  name="Question"
+                  {...props}
+                  extraData={user}
+                  extraData1={gameRoomData}
+                  // extraData2={questionAnswerData}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Invite">
+              {(props) => (
+                <InviteToGameRoomScreen
+                  name="Invite"
                   {...props}
                   extraData={user}
                   extraData1={gameRoomData}
