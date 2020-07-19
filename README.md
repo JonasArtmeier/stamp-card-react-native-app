@@ -15,4 +15,4 @@ Every User can only give one answer per question and if the question is answered
 
 ## this was the first database design:
 
-![database design](databseExample.jpg)
+![database design](databaseExample.jpg)
