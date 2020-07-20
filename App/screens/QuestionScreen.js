@@ -30,8 +30,7 @@ export default function QuestionScreen(props) {
   const allD = allAnsweres.filter((ite) => ite === 'D');
   const [lockQuestion, setLockQuestion] = useState('');
   // const myTrueAnswer = myAnswer[0].userAnswer;
-  console.log('non database', questionAnswerData);
-  console.log(allB.length);
+
   useEffect(() => {
     firebase
       .firestore()
@@ -70,10 +69,7 @@ export default function QuestionScreen(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>{questionData.question}</Text>
-      </View>
-      <Spacer />
+      <Text style={styles.headline}>{questionData.question}</Text>
       <TouchableOpacity
         style={styles.firstBox}
         onPress={(e) => {
@@ -130,15 +126,19 @@ export default function QuestionScreen(props) {
       </TouchableOpacity>
       <View>
         {userAnswered.includes(userID) === true ? (
-          <Text>Your Answer: {myAnswerHistory} </Text>
+          <Text style={styles.headline}>
+            Your Answer was: {myAnswerHistory}{' '}
+          </Text>
         ) : (
-          <Text>Your Answer: {instantUserAnswer} </Text>
+          <Text style={styles.headline}>
+            Your Answer was: {instantUserAnswer}{' '}
+          </Text>
         )}
       </View>
-      <View style={styles.firstBox}>
+      <View style={styles.gameRooms}>
         {myAnswerHistory !== '' ? (
           <>
-            <Text>All Answers</Text>
+            <Text style={styles.headline}>All Answers:</Text>
             <View style={styles.firstBox}>
               <Text>A: {allA.length}</Text>
             </View>
@@ -167,74 +167,65 @@ export default function QuestionScreen(props) {
 /// styles ///
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    backgroundColor: 'white',
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
   },
+  headline: {
+    marginRight: 30,
+    marginLeft: 30,
+    marginTop: 20,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
   firstBox: {
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
+    alignItems: 'center',
+    backgroundColor: 'deepskyblue',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
     alignSelf: 'stretch',
   },
-  newRoomButton: {
+  gameRooms: {
     flex: 1,
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
-    alignContent: 'center',
-  },
-  formContainer: {
-    flexDirection: 'row',
-    marginTop: 40,
-    marginBottom: 20,
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    height: 48,
-    borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
     paddingLeft: 16,
-    flex: 1,
-    marginRight: 5,
+    borderRadius: 5,
+    alignSelf: 'stretch',
   },
   button: {
-    height: 47,
+    backgroundColor: 'deepskyblue',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 40,
+    height: 48,
     borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
+    marginLeft: 30,
+    marginRight: 30,
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16,
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333',
+  flatListText: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderStyle: 'dashed',
   },
 });

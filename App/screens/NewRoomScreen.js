@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 import { useScreens } from 'react-native-screens';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function NewRoomScreen(props) {
   const [gameRoomName, setGameRoomName] = useState('');
@@ -55,6 +56,9 @@ export default function NewRoomScreen(props) {
               .doc(res.id)
               .update({
                 id: res.id,
+              })
+              .then(() => {
+                navigation.navigate('Home');
               });
           });
       })
@@ -65,10 +69,16 @@ export default function NewRoomScreen(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1, width: '100%' }}
+        keyboardShouldPersistTaps="always"
+      >
+        <Text style={styles.headline}>Create a new Game Room</Text>
+
+        {/* <View style={styles.input}> */}
         <TextInput
           style={styles.input}
-          placeholder="Game Room Name"
+          placeholder="Name"
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setGameRoomName(text)}
           value={gameRoomName}
@@ -142,16 +152,16 @@ export default function NewRoomScreen(props) {
             ]}
           />
         </View>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          navigation.navigate('Home');
-          onCreateRoom();
-        }}
-      >
-        <Text style={styles.buttonText}>create Room</Text>
-      </TouchableOpacity>
+        {/* </View> */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            onCreateRoom();
+          }}
+        >
+          <Text style={styles.buttonText}>create Room</Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
     </View>
     // {/* <View>
     //   <TouchableOpacity onPress={() => logOutPress()}>
@@ -175,66 +185,77 @@ export default function NewRoomScreen(props) {
 /// styles ///
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
   },
+  headline: {
+    marginTop: 20,
+    height: 48,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
   firstBox: {
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
+    alignItems: 'center',
+    backgroundColor: 'deepskyblue',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
     alignSelf: 'stretch',
   },
-  logOutButton: { flex: 1, backgroundColor: 'black' },
-  formContainer: {
-    flexDirection: 'row',
-    height: 80,
-    marginTop: 40,
-    marginBottom: 20,
+  gameRooms: {
     flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
+    alignSelf: 'stretch',
+  },
+  button: {
+    backgroundColor: 'deepskyblue',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 40,
+    marginBottom: 10,
+    height: 48,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  flatListText: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderStyle: 'dashed',
   },
   input: {
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: 'white',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
     paddingLeft: 16,
-    flex: 1,
-    marginRight: 5,
-  },
-  button: {
-    height: 47,
-    borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16,
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333',
   },
 });

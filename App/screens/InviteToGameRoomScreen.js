@@ -14,13 +14,76 @@ import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
 
 export default function InviteToGameRoomScreen(props) {
-  const [question, setQuestion] = useState('');
+  const navigation = useNavigation();
+  const [userName, setUserName] = useState('');
+  const [userData, setUserData] = useState('');
+  const [memberIds, setMemberIds] = useState('');
+  // const [question, setQuestion] = useState('');
 
-  const questionRef = firebase.firestore().collection('users');
+  // const userRef = firebase.firestore().collection('users');
 
   const userID = props.extraData.id;
+  const myUserName = props.extraData.fullName;
   const gameRoomId = props.route.params.myGameRoom.id;
 
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection('users')
+      .get()
+      .then((querySnapshot) => {
+        // const fullName = querySnapshot.docs.map((doc) => doc.data().fullName);
+        const userData = querySnapshot.docs.map((doc) => doc.data());
+        // setUserName(fullName);
+        setUserData(userData);
+      });
+    firebase
+      .firestore()
+      .collection('RoomMemberJunction')
+      .where('gameRoomId', '==', gameRoomId)
+      .get()
+      .then((querySnapshot) => {
+        const userIds = querySnapshot.docs.map((doc) => doc.data().userId);
+        setMemberIds(userIds);
+      });
+  }, [userData, gameRoomId]);
+
+  const onInviteUser = (item) => {
+    if (memberIds.includes(item.id) === true) {
+      alert('is already a member');
+      return;
+    }
+
+    const data = {
+      gameRoomId: gameRoomId,
+      userId: item.id,
+    };
+    firebase
+      .firestore()
+      .collection('RoomMemberJunction')
+      .add(data)
+      .then((response) => {
+        firebase
+          .firestore()
+          .collection('RoomMemberJunction')
+          .doc(response.id)
+          .update({
+            id: response.id,
+          });
+        alert('has been added');
+      });
+  };
+
+  //   firebase
+  //         .firestore()
+  //         .collection('RoomMemberJunction')
+  //         .where('gameRoomId', '==', gameRoomId)
+  //         .get()
+  //         .then((querySnapshot) => {
+  //           const gameRoomIds = querySnapshot.docs.map(
+  //             (doc) => doc.data().userId,
+  //           );
+  // }
   // // console.log(gameRoomId)
   // const onCreateQuestion = () => {
   //   if (question && question.length <= 0) {
@@ -60,13 +123,13 @@ export default function InviteToGameRoomScreen(props) {
   //       alert(error);
   //     });
   // };
-
+  // console.log(userIds);
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
         <View style={styles.container}>
           <FlatList
-            data={gameRoomData}
+            data={userData}
             renderItem={({ item, index }) => (
               <View
                 style={{
@@ -76,15 +139,17 @@ export default function InviteToGameRoomScreen(props) {
                   justifyContent: 'center',
                 }}
               >
-                {gameRoomData !== undefined ? (
+                {userName !== myUserName ? (
                   <Text
                     onPress={() =>
-                      navigation.navigate('GameRoom', {
-                        myGameRoom: item,
-                      })
+                      // alert(item.id)}
+                      //   // navigation.navigate('GameRoom', {
+                      //   //   myGameRoom: item,
+                      //   // })
+                      onInviteUser(item)
                     }
                   >
-                    Game Room Name: {item.name}
+                    User: {item.fullName}
                   </Text>
                 ) : (
                   <Text>No Game Room</Text>

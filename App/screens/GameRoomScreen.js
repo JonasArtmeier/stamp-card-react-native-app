@@ -56,14 +56,12 @@ export default function GameRoomScreen(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>{myGameRoom.name}</Text>
-      </View>
-      <Spacer />
+      <Text style={styles.headline}>{myGameRoom.name}</Text>
       <View style={styles.firstBox}>
         <Text style={styles.buttonText}>Here can be your ad</Text>
       </View>
-      <View style={styles.firstBox}>
+      <Text style={styles.headline}>The Questions</Text>
+      {/* <View style={styles.firstBox}>
         <Text>
           {' '}
           The next Question will be live at: {myGameRoom.questionStart}{' '}
@@ -77,39 +75,42 @@ export default function GameRoomScreen(props) {
       </View>
       <View style={styles.firstBox}>
         <Text style={styles.buttonText}>test</Text>
+      </View> */}
+      <View style={styles.gameRooms}>
+        <FlatList
+          data={questionData}
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                marginTop: 10,
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {questionData !== undefined ? (
+                <Text
+                  style={styles.flatListText}
+                  onPress={() =>
+                    navigation.navigate('Question', {
+                      questionData: item,
+                    })
+                  }
+                >
+                  {item.question}
+                </Text>
+              ) : (
+                <Text>No Question</Text>
+              )}
+            </View>
+          )}
+        />
       </View>
-      <FlatList
-        data={questionData}
-        renderItem={({ item, index }) => (
-          <View
-            style={{
-              height: 50,
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {questionData !== undefined ? (
-              <Text
-                onPress={() =>
-                  navigation.navigate('Question', {
-                    questionData: item,
-                  })
-                }
-              >
-                Question: {item.question}
-              </Text>
-            ) : (
-              <Text>No Question</Text>
-            )}
-          </View>
-        )}
-      />
       <View style={styles.formContainer}>
         <TouchableOpacity
-          style={styles.newRoomButton}
+          style={styles.button}
           onPress={() =>
-            navigation.navigate('NewQuestion', {
+            navigation.navigate('Invite', {
               myGameRoom: myGameRoom,
             })
           }
@@ -119,9 +120,9 @@ export default function GameRoomScreen(props) {
       </View>
       <View style={styles.formContainer}>
         <TouchableOpacity
-          style={styles.newRoomButton}
+          style={styles.button}
           onPress={() =>
-            navigation.navigate('Invite', {
+            navigation.navigate('NewQuestion', {
               myGameRoom: myGameRoom,
             })
           }
@@ -131,7 +132,7 @@ export default function GameRoomScreen(props) {
       </View>
       <View>
         <TouchableOpacity style={styles.button} onPress={() => logOutPress()}>
-          <Text>Logout</Text>
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -141,73 +142,65 @@ export default function GameRoomScreen(props) {
 /// styles ///
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
   },
+  headline: {
+    marginTop: 20,
+    height: 48,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
   firstBox: {
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
+    alignItems: 'center',
+    backgroundColor: 'deepskyblue',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
     alignSelf: 'stretch',
   },
-  newRoomButton: {
+  gameRooms: {
     flex: 1,
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
-    alignContent: 'center',
-  },
-  formContainer: {
-    flexDirection: 'row',
-    marginTop: 40,
-    marginBottom: 20,
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    height: 48,
-    borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
     paddingLeft: 16,
-    flex: 1,
-    marginRight: 5,
+    borderRadius: 5,
+    alignSelf: 'stretch',
   },
   button: {
-    height: 47,
+    backgroundColor: 'deepskyblue',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 40,
+    marginBottom: 10,
+    height: 48,
     borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
+    marginLeft: 30,
+    marginRight: 30,
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16,
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333',
+  flatListText: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderStyle: 'dashed',
   },
 });

@@ -23,6 +23,7 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 export default function App() {
+  // const isFocused = useIsFocused();
   console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
   console.disableYellowBox = true;
   YellowBox.ignoreWarnings(['Setting a timer']);
@@ -43,28 +44,28 @@ export default function App() {
           });
         /// Get Game Room Data ////
         // console.log('id', user.uid);
-        firebase
-          .firestore()
-          .collection('RoomMemberJunction')
-          .where('userId', '==', user.uid)
-          .get()
-          .then((querySnapshot) => {
-            const gameRoomIds = querySnapshot.docs.map(
-              (doc) => doc.data().gameRoomId,
-            );
+        // firebase
+        //   .firestore()
+        //   .collection('RoomMemberJunction')
+        //   .where('userId', '==', user.uid)
+        //   .get()
+        //   .then((querySnapshot) => {
+        //     const gameRoomIds = querySnapshot.docs.map(
+        //       (doc) => doc.data().gameRoomId,
+        //     );
 
-            firebase
-              .firestore()
-              .collection('gameRooms')
-              .where('id', 'in', gameRoomIds)
-              .get()
-              .then((snapshot) => {
-                const gameRoomsData = snapshot.docs.map((document) => {
-                  return document.data();
-                });
-                setGameRoomData(gameRoomsData);
-              });
-          });
+        //     firebase
+        //       .firestore()
+        //       .collection('gameRooms')
+        //       .where('id', 'in', gameRoomIds)
+        //       .get()
+        //       .then((snapshot) => {
+        //         const gameRoomsData = snapshot.docs.map((document) => {
+        //           return document.data();
+        //         });
+        //         setGameRoomData(gameRoomsData);
+        //       });
+        //   });
 
         /// Question Data End ///
         // firebase
@@ -84,7 +85,7 @@ export default function App() {
 
   // console.log(questionData)
   // const [questionData, setQuestionData] = useState([])
-  const [gameRoomData, setGameRoomData] = useState([]);
+  // const [gameRoomData, setGameRoomData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   // const [questionAnswerData, setQuestionAnswerData] = useState([]);
@@ -106,7 +107,7 @@ export default function App() {
                   {...props}
                   extraData={user}
                   {...props}
-                  extraData1={gameRoomData}
+                  // extraData1={gameRoomData}
                 />
               )}
             </Stack.Screen>
@@ -130,7 +131,7 @@ export default function App() {
                   name="GameRoom"
                   {...props}
                   extraData={user}
-                  extraData1={gameRoomData}
+                  // extraData1={gameRoomData}
                 />
               )}
             </Stack.Screen>
@@ -140,7 +141,7 @@ export default function App() {
                   name="Question"
                   {...props}
                   extraData={user}
-                  extraData1={gameRoomData}
+                  // extraData1={gameRoomData}
                   // extraData2={questionAnswerData}
                 />
               )}
@@ -151,7 +152,7 @@ export default function App() {
                   name="Invite"
                   {...props}
                   extraData={user}
-                  extraData1={gameRoomData}
+                  // extraData1={gameRoomData}
                 />
               )}
             </Stack.Screen>
