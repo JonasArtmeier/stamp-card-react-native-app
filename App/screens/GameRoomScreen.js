@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Footer from '../components/Footer';
 import {
   FlatList,
   Keyboard,
@@ -7,16 +8,19 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 import Spacer from '../components/Spacer';
 // import { useScreens } from 'react-native-screens';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import GameRooms from '../components/GameRooms';
 // import myGameRoom from '../screens/HomeScreen';
 
 export default function GameRoomScreen(props) {
+  const isFocused = useIsFocused();
   useEffect(() => {
+    if (!isFocused) return;
     firebase
       .firestore()
       .collection('QuestionRoomJunction')
@@ -40,7 +44,7 @@ export default function GameRoomScreen(props) {
             setQuestionData(questionsData);
           });
       });
-  }, []);
+  }, [props.route.params.myGameRoom.id, isFocused]);
 
   const [questionData, setQuestionData] = useState([]);
   const userFullName = props.extraData.fullName;
@@ -48,18 +52,66 @@ export default function GameRoomScreen(props) {
   const userID = props.extraData.id;
   const myGameRoom = props.route.params.myGameRoom;
   console.log('final', questionData);
-  const logOutPress = () => {
-    firebase.auth().signOut();
-    navigation.navigate('Login'); // <== This will signout from firebase
+  const deleteRoom = () => {
+    firebase
+      .firestore()
+      .collection('RoomMemberJunction')
+      .where('gameRoomId', '==', props.route.params.myGameRoom.id)
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => doc.ref.delete());
+      });
+    // .get()
+    // .then((querySnapshot) => {
+    //   const roomMemberJunctionIds = querySnapshot.docs.map((doc) => doc.id);
+    //   const batch = firebase.firestore().batch();
+    //   batch.set([roomMemberJunctionIds]);
+    //   batch.delete([roomMemberJunctionIds]);
+    //   batch.commit();
+    // });
+
+    // .then((response) => {
+    //   const roomMemberJunctionIds = response.id;
+    //   console.log(roomMemberJunctionIds);
+    // .then((querySnapshot) => {
+    //   var batch = firebase.batch();
+    //   querySnapshot.forEach(function (doc) {
+    //     batch.delete(doc.ref);
+    //   });
+    // })
+    // .then(() => {
+    //   console.log('Room deleted');
+
+    // const roomMemberJunctionIds = querySnapshot.docs.map((doc) => doc.id);
+    // console.log('test', roomMemberJunctionIds);
+    // console.log('props', props.route.params.myGameRoom.id);
+    // firebase
+    //   .firestore()
+    //   .collection('RoomMemberJunction')
+    //   .doc(roomMemberJunctionIds)
+    //   .delete();
+    // .then(() => {
+    //   alert('Room deleted');
+
+    firebase
+      .firestore()
+      .collection('gameRooms')
+      .doc(props.route.params.myGameRoom.id)
+      .delete()
+      .then(() => {
+        alert('Room deleted');
+        navigation.navigate('Home');
+      });
+
+    // <== This will signout from firebase
   };
+
   // console.log('extradata', props.route.params.myGameRoom.name);
 
   return (
     <View style={styles.container}>
       <Text style={styles.headline}>{myGameRoom.name}</Text>
-      <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>Here can be your ad</Text>
-      </View>
+      <Image style={styles.logo} source={require('../assets/logo.png')} />
       <Text style={styles.headline}>The Questions</Text>
       {/* <View style={styles.firstBox}>
         <Text>
@@ -100,41 +152,36 @@ export default function GameRoomScreen(props) {
                   {item.question}
                 </Text>
               ) : (
-                <Text>No Question</Text>
+                <Text style={styles.flatListText}>No Question</Text>
               )}
             </View>
           )}
         />
       </View>
-      <View style={styles.formContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('Invite', {
-              myGameRoom: myGameRoom,
-            })
-          }
-        >
-          <Text style={styles.buttonText}>Invite a Friend</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.formContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('NewQuestion', {
-              myGameRoom: myGameRoom,
-            })
-          }
-        >
-          <Text style={styles.buttonText}>Create a Question</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TouchableOpacity style={styles.button} onPress={() => logOutPress()}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('Invite', {
+            myGameRoom: myGameRoom,
+          })
+        }
+      >
+        <Text style={styles.buttonText}>Invite a Friend</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('NewQuestion', {
+            myGameRoom: myGameRoom,
+          })
+        }
+      >
+        <Text style={styles.buttonText}>Create a Question</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => deleteRoom()}>
+        <Text style={styles.buttonText}>Delete Room</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -145,6 +192,11 @@ const styles = StyleSheet.create({
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
+  },
+  logo: {
+    flex: 1,
+    width: 140,
+    alignSelf: 'center',
   },
   headline: {
     marginTop: 20,
@@ -165,7 +217,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   gameRooms: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
     backgroundColor: 'azure',
     marginTop: 10,
@@ -180,7 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'deepskyblue',
     marginLeft: 30,
     marginRight: 30,
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 10,
     height: 48,
     borderRadius: 5,

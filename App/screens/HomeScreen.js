@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  BackHandler,
+  Image,
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 // import { useScreens } from 'react-native-screens';
@@ -19,6 +21,7 @@ export default function HomeScreen(props) {
   const navigation = useNavigation();
   const userID = props.extraData.id;
   const [gameRoomData, setGameRoomData] = useState([]);
+  const [myGameRoomIds, setMyGameRoomIds] = useState('');
 
   useEffect(() => {
     if (!isFocused) return;
@@ -34,7 +37,7 @@ export default function HomeScreen(props) {
         const gameRoomIds = querySnapshot.docs.map(
           (doc) => doc.data().gameRoomId,
         );
-        console.log('roomIds', gameRoomIds);
+        setMyGameRoomIds(gameRoomIds);
         firebase
           .firestore()
           .collection('gameRooms')
@@ -43,7 +46,6 @@ export default function HomeScreen(props) {
           .then((snapshot) => {
             // console.log('snapshot', snapshot.data());
             const gameRoomsData = snapshot.docs.map((document) => {
-              console.log(document.data());
               return document.data();
             });
             setGameRoomData(gameRoomsData);
@@ -57,19 +59,15 @@ export default function HomeScreen(props) {
   // console.log('items Data', item);
   // };
 
-  const logOutPress = () => {
-    firebase.auth().signOut();
-    // navigation.navigate(''); // <== This will signout from firebase
+  const logOutPress = async () => {
+    await firebase.auth().signOut().then(BackHandler.exitApp());
   };
-
   return (
     <View style={styles.container}>
-      {/* <View style={styles.firstBox}> */}
       <Text style={styles.headline}>Welcome {userFullName}</Text>
-      {/* </View> */}
-      <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>Here can be your ad</Text>
-      </View>
+
+      <Image style={styles.logo} source={require('../assets/logo.png')} />
+
       <Text style={styles.headline}>Your Game Rooms:</Text>
       <View style={styles.gameRooms}>
         {/* <GameRooms userID={userID} /> */}
@@ -107,7 +105,11 @@ export default function HomeScreen(props) {
       <View style={styles.formContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('NewRoom')}
+          onPress={() => {
+            myGameRoomIds.length > 9
+              ? alert('You can not have mor than 10 Game Rooms')
+              : navigation.navigate('NewRoom');
+          }}
         >
           <Text style={styles.buttonText}>Create New Game Room</Text>
         </TouchableOpacity>
@@ -128,6 +130,11 @@ const styles = StyleSheet.create({
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
+  },
+  logo: {
+    flex: 1,
+    width: 140,
+    alignSelf: 'center',
   },
   headline: {
     marginTop: 20,

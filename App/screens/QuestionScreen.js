@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Footer from '../components/Footer';
 import {
   FlatList,
   Keyboard,
@@ -160,6 +161,7 @@ export default function QuestionScreen(props) {
           </>
         )}
       </View>
+      <Footer />
     </View>
   );
 }

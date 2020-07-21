@@ -1,3 +1,4 @@
+import Footer from '../components/Footer';
 import React, { useEffect, useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import {
@@ -8,16 +9,20 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 import { useScreens } from 'react-native-screens';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 export default function InviteToGameRoomScreen(props) {
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [userName, setUserName] = useState('');
   const [userData, setUserData] = useState('');
   const [memberIds, setMemberIds] = useState('');
+  const [lockUser, setLockUser] = useState('');
+  const [myGameRoomIds, setMyGameRoomIds] = useState('');
   // const [question, setQuestion] = useState('');
 
   // const userRef = firebase.firestore().collection('users');
@@ -27,15 +32,16 @@ export default function InviteToGameRoomScreen(props) {
   const gameRoomId = props.route.params.myGameRoom.id;
 
   useEffect(() => {
+    if (!isFocused) return;
     firebase
       .firestore()
       .collection('users')
       .get()
       .then((querySnapshot) => {
         // const fullName = querySnapshot.docs.map((doc) => doc.data().fullName);
-        const userData = querySnapshot.docs.map((doc) => doc.data());
+        const userDatas = querySnapshot.docs.map((doc) => doc.data());
         // setUserName(fullName);
-        setUserData(userData);
+        setUserData(userDatas);
       });
     firebase
       .firestore()
@@ -46,14 +52,28 @@ export default function InviteToGameRoomScreen(props) {
         const userIds = querySnapshot.docs.map((doc) => doc.data().userId);
         setMemberIds(userIds);
       });
-  }, [userData, gameRoomId]);
+  }, [gameRoomId, isFocused]);
 
   const onInviteUser = (item) => {
     if (memberIds.includes(item.id) === true) {
       alert('is already a member');
       return;
     }
-
+    firebase
+      .firestore()
+      .collection('RoomMemberJunction')
+      .where('userId', '==', item.id)
+      .get()
+      .then((querySnapshot) => {
+        const gameRoomIds = querySnapshot.docs.map(
+          (doc) => doc.data().gameRoomId,
+        );
+        setMyGameRoomIds(gameRoomIds);
+      });
+    if (myGameRoomIds.length > 9) {
+      alert('The user is in to many Rooms');
+      return;
+    }
     const data = {
       gameRoomId: gameRoomId,
       userId: item.id,
@@ -71,94 +91,54 @@ export default function InviteToGameRoomScreen(props) {
             id: response.id,
           });
         alert('has been added');
+        setLockUser(item.id);
       });
   };
 
-  //   firebase
-  //         .firestore()
-  //         .collection('RoomMemberJunction')
-  //         .where('gameRoomId', '==', gameRoomId)
-  //         .get()
-  //         .then((querySnapshot) => {
-  //           const gameRoomIds = querySnapshot.docs.map(
-  //             (doc) => doc.data().userId,
-  //           );
-  // }
-  // // console.log(gameRoomId)
-  // const onCreateQuestion = () => {
-  //   if (question && question.length <= 0) {
-  //     alert('Enter a Question');
-  //     return;
-  //   }
-  //   const data = {
-  //     question: question,
-  //     type: questionType,
-  //     answer1: answer1,
-  //     answer2: answer2,
-  //     answer3: answer3,
-  //     answer4: answer4,
-  //     creator: userID,
-  //   };
-  //   questionRef
-  //     .add(data)
-  //     .then((response) => {
-  //       firebase.firestore().collection('questions').doc(response.id).update({
-  //         id: response.id,
-  //       });
-  //       firebase
-  //         .firestore()
-  //         .collection('QuestionRoomJunction')
-  //         .add({ questionId: response.id, gameRoomId: gameRoomId })
-  //         .then((res) => {
-  //           firebase
-  //             .firestore()
-  //             .collection('QuestionRoomJunction')
-  //             .doc(res.id)
-  //             .update({
-  //               id: res.id,
-  //             });
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       alert(error);
-  //     });
-  // };
-  // console.log(userIds);
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <View style={styles.container}>
-          <FlatList
-            data={userData}
-            renderItem={({ item, index }) => (
-              <View
-                style={{
-                  height: 50,
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {userName !== myUserName ? (
-                  <Text
-                    onPress={() =>
-                      // alert(item.id)}
-                      //   // navigation.navigate('GameRoom', {
-                      //   //   myGameRoom: item,
-                      //   // })
-                      onInviteUser(item)
+      <Text style={styles.headline}>Invite a Friend </Text>
+      <Image style={styles.logo} source={require('../assets/logo.png')} />
+      <Text style={styles.headline}>User:</Text>
+      <View style={styles.gameRooms}>
+        <FlatList
+          data={userData}
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                marginTop: 10,
+                height: 50,
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {userName !== myUserName ? (
+                <Text
+                  style={styles.flatListText}
+                  onPress={() => {
+                    if (lockUser.includes(item.id)) {
+                      alert('User already added');
+                      return;
                     }
-                  >
-                    User: {item.fullName}
-                  </Text>
-                ) : (
-                  <Text>No Game Room</Text>
-                )}
-              </View>
-            )}
-          />
-        </View>
+                    // alert(item.id)}
+                    //   // navigation.navigate('GameRoom', {
+                    //   //   myGameRoom: item,
+                    //   // })
+                    onInviteUser(item);
+                  }}
+                >
+                  {item.fullName}
+                </Text>
+              ) : (
+                <Text style={styles.flatListText}>No Users</Text>
+              )}
+            </View>
+          )}
+        />
       </View>
+
+      <Footer />
     </View>
     // {/* <View>
     //   <TouchableOpacity onPress={() => logOutPress()}>
@@ -182,66 +162,70 @@ export default function InviteToGameRoomScreen(props) {
 /// styles ///
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
   },
+  logo: {
+    flex: 1,
+    width: 140,
+    alignSelf: 'center',
+  },
+  headline: {
+    marginTop: 20,
+    height: 48,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
   firstBox: {
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
+    alignItems: 'center',
+    backgroundColor: 'deepskyblue',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
     alignSelf: 'stretch',
   },
-  logOutButton: { flex: 1, backgroundColor: 'black' },
-  formContainer: {
-    flexDirection: 'row',
-    height: 80,
-    marginTop: 40,
-    marginBottom: 20,
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    justifyContent: 'center',
+  gameRooms: {
+    flex: 3,
     alignItems: 'center',
-  },
-  input: {
-    height: 48,
-    borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
     paddingLeft: 16,
-    flex: 1,
-    marginRight: 5,
+    borderRadius: 5,
+    alignSelf: 'stretch',
   },
   button: {
-    height: 47,
+    backgroundColor: 'deepskyblue',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 40,
+    marginBottom: 10,
+    height: 48,
     borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
+    marginLeft: 30,
+    marginRight: 30,
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16,
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333',
+  flatListText: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderStyle: 'dashed',
   },
 });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from '../components/Footer';
 import {
   Image,
   Text,
@@ -24,19 +25,20 @@ export default function RegistrationScreen({ navigation }) {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
+      .then(async (response) => {
         const uid = response.user.uid;
         const data = {
           id: uid,
           email: email,
           fullName: fullName,
         };
+        await navigation.navigate('Registration');
         const usersRef = firebase.firestore().collection('users');
         usersRef
           .doc(uid)
           .set(data)
-          .then(async () => {
-            await navigation.navigate({ user: data });
+          .then(() => {
+            navigation.navigate('Home', { user: data });
           })
           .catch((error) => {
             alert(error);
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   button: {
-    backgroundColor: '#788eec',
+    backgroundColor: 'deepskyblue',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,

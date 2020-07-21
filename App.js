@@ -81,7 +81,7 @@ export default function App() {
         setLoading(false);
       }
     });
-  }, []);
+  }, [user]);
 
   // console.log(questionData)
   // const [questionData, setQuestionData] = useState([])

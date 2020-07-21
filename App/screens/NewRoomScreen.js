@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
+import Footer from '../components/Footer';
 import {
   FlatList,
   Keyboard,
@@ -21,6 +22,7 @@ export default function NewRoomScreen(props) {
   const [questionEnd, setQuestionEnd] = useState('');
   const [gameRoomId, setGameRoomId] = useState('');
   const [id, setId] = useState('');
+  const [lockButton, setLockButton] = useState('');
   const navigation = useNavigation();
   const gameRoomRef = firebase.firestore().collection('gameRooms');
   // const roomMemberJunctionRef = firebase
@@ -65,103 +67,103 @@ export default function NewRoomScreen(props) {
       .catch((error) => {
         alert(error);
       });
+    setLockButton('locked');
   };
 
   return (
     <View style={styles.container}>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps="always"
+      <Text style={styles.headline}>Create a new Game Room</Text>
+
+      {/* <View style={styles.input}> */}
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        placeholderTextColor="#aaaaaa"
+        onChangeText={(text) => setGameRoomName(text)}
+        value={gameRoomName}
+        underlineColorAndroid="transparent"
+        autoCapitalize="none"
+      />
+
+      <Text style={styles.headline}>Start</Text>
+      <RNPickerSelect
+        onValueChange={(text) => setQuestionStart(text)}
+        label="start"
+        items={[
+          { label: '1am', value: '01:00' },
+          { label: '2am', value: '02:00' },
+          { label: '3am', value: '03:00' },
+          { label: '4am', value: '04:00' },
+          { label: '5am', value: '05:00' },
+          { label: '6am', value: '06:00' },
+          { label: '7am', value: '07:00' },
+          { label: '8am', value: '08:00' },
+          { label: '9am', value: '09:00' },
+          { label: '10am', value: '10:00' },
+          { label: '11am', value: '11:00' },
+          { label: '12am', value: '12:00' },
+          { label: '1pm', value: '13:00' },
+          { label: '2pm', value: '14:00' },
+          { label: '3pm', value: '15:00' },
+          { label: '4pm', value: '16:00' },
+          { label: '5pm', value: '17:00' },
+          { label: '6pm', value: '18:00' },
+          { label: '7pm', value: '19:00' },
+          { label: '8pm', value: '20:00' },
+          { label: '9pm', value: '21:00' },
+          { label: '10pm', value: '22:00' },
+          { label: '11pm', value: '23:00' },
+          { label: '12pm', value: '24:00' },
+        ]}
+      />
+
+      <Text style={styles.headline}>End</Text>
+      <RNPickerSelect
+        style={styles.input}
+        onValueChange={(text) => setQuestionEnd(text)}
+        label="start"
+        items={[
+          { label: '1am', value: '01:00' },
+          { label: '2am', value: '02:00' },
+          { label: '3am', value: '03:00' },
+          { label: '4am', value: '04:00' },
+          { label: '5am', value: '05:00' },
+          { label: '6am', value: '06:00' },
+          { label: '7am', value: '07:00' },
+          { label: '8am', value: '08:00' },
+          { label: '9am', value: '09:00' },
+          { label: '10am', value: '10:00' },
+          { label: '11am', value: '11:00' },
+          { label: '12am', value: '12:00' },
+          { label: '1pm', value: '13:00' },
+          { label: '2pm', value: '14:00' },
+          { label: '3pm', value: '15:00' },
+          { label: '4pm', value: '16:00' },
+          { label: '5pm', value: '17:00' },
+          { label: '6pm', value: '18:00' },
+          { label: '7pm', value: '19:00' },
+          { label: '8pm', value: '20:00' },
+          { label: '9pm', value: '21:00' },
+          { label: '10pm', value: '22:00' },
+          { label: '11pm', value: '23:00' },
+          { label: '12pm', value: '24:00' },
+        ]}
+      />
+
+      {/* </View> */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          if (lockButton === 'locked') {
+            return;
+          }
+          onCreateRoom();
+        }}
       >
-        <Text style={styles.headline}>Create a new Game Room</Text>
+        <Text style={styles.buttonText}>create Room</Text>
+      </TouchableOpacity>
 
-        {/* <View style={styles.input}> */}
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setGameRoomName(text)}
-          value={gameRoomName}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-
-        <View style={styles.container}>
-          <Text>Start</Text>
-          <RNPickerSelect
-            onValueChange={(text) => setQuestionStart(text)}
-            label="start"
-            items={[
-              { label: '1am', value: '01:00' },
-              { label: '2am', value: '02:00' },
-              { label: '3am', value: '03:00' },
-              { label: '4am', value: '04:00' },
-              { label: '5am', value: '05:00' },
-              { label: '6am', value: '06:00' },
-              { label: '7am', value: '07:00' },
-              { label: '8am', value: '08:00' },
-              { label: '9am', value: '09:00' },
-              { label: '10am', value: '10:00' },
-              { label: '11am', value: '11:00' },
-              { label: '12am', value: '12:00' },
-              { label: '1pm', value: '13:00' },
-              { label: '2pm', value: '14:00' },
-              { label: '3pm', value: '15:00' },
-              { label: '4pm', value: '16:00' },
-              { label: '5pm', value: '17:00' },
-              { label: '6pm', value: '18:00' },
-              { label: '7pm', value: '19:00' },
-              { label: '8pm', value: '20:00' },
-              { label: '9pm', value: '21:00' },
-              { label: '10pm', value: '22:00' },
-              { label: '11pm', value: '23:00' },
-              { label: '12pm', value: '24:00' },
-            ]}
-          />
-        </View>
-        <View style={styles.container}>
-          <Text>End</Text>
-          <RNPickerSelect
-            onValueChange={(text) => setQuestionEnd(text)}
-            label="start"
-            items={[
-              { label: '1am', value: '01:00' },
-              { label: '2am', value: '02:00' },
-              { label: '3am', value: '03:00' },
-              { label: '4am', value: '04:00' },
-              { label: '5am', value: '05:00' },
-              { label: '6am', value: '06:00' },
-              { label: '7am', value: '07:00' },
-              { label: '8am', value: '08:00' },
-              { label: '9am', value: '09:00' },
-              { label: '10am', value: '10:00' },
-              { label: '11am', value: '11:00' },
-              { label: '12am', value: '12:00' },
-              { label: '1pm', value: '13:00' },
-              { label: '2pm', value: '14:00' },
-              { label: '3pm', value: '15:00' },
-              { label: '4pm', value: '16:00' },
-              { label: '5pm', value: '17:00' },
-              { label: '6pm', value: '18:00' },
-              { label: '7pm', value: '19:00' },
-              { label: '8pm', value: '20:00' },
-              { label: '9pm', value: '21:00' },
-              { label: '10pm', value: '22:00' },
-              { label: '11pm', value: '23:00' },
-              { label: '12pm', value: '24:00' },
-            ]}
-          />
-        </View>
-        {/* </View> */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            onCreateRoom();
-          }}
-        >
-          <Text style={styles.buttonText}>create Room</Text>
-        </TouchableOpacity>
-      </KeyboardAwareScrollView>
+      <Footer />
     </View>
     // {/* <View>
     //   <TouchableOpacity onPress={() => logOutPress()}>
@@ -188,6 +190,8 @@ const styles = StyleSheet.create({
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
+    marginLeft: 30,
+    marginRight: 30,
   },
   headline: {
     marginTop: 20,
@@ -257,5 +261,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     paddingLeft: 16,
+    alignSelf: 'stretch',
   },
 });

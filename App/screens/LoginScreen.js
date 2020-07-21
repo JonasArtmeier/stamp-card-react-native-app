@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from '../components/Footer';
 import {
   Image,
   Text,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   button: {
-    backgroundColor: '#788eec',
+    backgroundColor: 'deepskyblue',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,

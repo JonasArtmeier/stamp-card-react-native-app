@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
+import Footer from '../components/Footer';
 import {
   FlatList,
   Keyboard,
@@ -14,25 +15,24 @@ import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
 
 export default function NewQuestionScreen(props) {
-  
   const [question, setQuestion] = useState('');
   const [questionType, setQuestionType] = useState('');
   const [answer1, setAnswer1] = useState('');
   const [answer2, setAnswer2] = useState('');
   const [answer3, setAnswer3] = useState('');
   const [answer4, setAnswer4] = useState('');
-  const [correctAnswer, getCorrectAnswer] = useState('')
+  const [correctAnswer, getCorrectAnswer] = useState('');
+  const [lockButton, setLockButton] = useState('');
   const navigation = useNavigation();
   const questionRef = firebase.firestore().collection('questions');
   // const roomMemberJunctionRef = firebase
   //   .firestore()
   //   .colltection('RoomMemberJunction');
   const userID = props.extraData.id;
-  const gameRoomId = props.route.params.myGameRoom.id
+  const gameRoomId = props.route.params.myGameRoom.id;
 
   // console.log(gameRoomId)
   const onCreateQuestion = () => {
-    
     if (question && question.length <= 0) {
       alert('Enter a Question');
       return;
@@ -69,39 +69,38 @@ export default function NewQuestionScreen(props) {
       .catch((error) => {
         alert(error);
       });
+    setLockButton('locked');
   };
 
   return (
     <View style={styles.container}>
-    <View style={styles.formContainer}>
-    <View style={styles.container}>
-    <Text>Question type</Text>
-    <RNPickerSelect
-            onValueChange={(text) => setQuestionType(text)}
-            label="start"
-            items={[
-              {label: 'open Question', value: 'open Question'},
-              {label: 'multiple choice', value: 'multiple choice'},
-              {label: 'closed Question', value: 'closed Question'}
-            ]}
-            /></View></View>
-      <View style={styles.formContainer}>
+      <Text style={styles.headline}>Question type</Text>
+
+      <RNPickerSelect
+        onValueChange={(text) => setQuestionType(text)}
+        label="start"
+        items={[
+          { label: 'open Question', value: 'open Question' },
+          { label: 'multiple choice', value: 'multiple choice' },
+          { label: 'closed Question', value: 'closed Question' },
+        ]}
+      />
+
+      <Text style={styles.headline}>Your Question</Text>
+      <TextInput
+        multiline
+        style={styles.input}
+        placeholder="Your Question"
+        placeholderTextColor="#aaaaaa"
+        onChangeText={(text) => setQuestion(text)}
+        value={question}
+        underlineColorAndroid="transparent"
+        autoCapitalize="none"
+      />
       <View style={styles.container}>
-    <Text>Question type</Text>
+        <Text>Answer 1</Text>
         <TextInput
-        multiline
-          style={styles.input}
-          placeholder="Your Question"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setQuestion(text)}
-          value={question}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        /></View>
-      </View>
-      <View style={styles.formContainer}><View style={styles.container}>
-          <Text>Answer 1</Text><TextInput
-        multiline
+          multiline
           style={styles.input}
           placeholder="Answer 1"
           placeholderTextColor="#aaaaaa"
@@ -109,9 +108,11 @@ export default function NewQuestionScreen(props) {
           value={answer1}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
-        /></View><View style={styles.container}>
-          <Text>Answer 2</Text><TextInput
-        multiline
+        />
+
+        <Text>Answer 2</Text>
+        <TextInput
+          multiline
           style={styles.input}
           placeholder="Answer 2"
           placeholderTextColor="#aaaaaa"
@@ -119,9 +120,11 @@ export default function NewQuestionScreen(props) {
           value={answer2}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
-        /></View><View style={styles.container}>
-          <Text>Answer 3</Text><TextInput
-        multiline
+        />
+
+        <Text>Answer 3</Text>
+        <TextInput
+          multiline
           style={styles.input}
           placeholder="Answer 3"
           placeholderTextColor="#aaaaaa"
@@ -129,9 +132,11 @@ export default function NewQuestionScreen(props) {
           value={answer3}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
-        /></View><View style={styles.container}>
-          <Text>Answer 4</Text><TextInput
-        multiline
+        />
+
+        <Text>Answer 4</Text>
+        <TextInput
+          multiline
           style={styles.input}
           placeholder="Answer 4"
           placeholderTextColor="#aaaaaa"
@@ -139,10 +144,14 @@ export default function NewQuestionScreen(props) {
           value={answer4}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
-        /></View></View>
+        />
+      </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
+          if (lockButton === 'locked') {
+            return;
+          }
           navigation.navigate('GameRoom');
           onCreateQuestion();
         }}
@@ -172,66 +181,85 @@ export default function NewQuestionScreen(props) {
 /// styles ///
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     zIndex: -1,
     flex: 1,
     alignItems: 'center',
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  headline: {
+    marginTop: 20,
+    height: 48,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
   },
   firstBox: {
-    flexDirection: 'column',
-    borderWidth: 3,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#788eec',
+    alignItems: 'center',
+    backgroundColor: 'deepskyblue',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    borderRadius: 5,
     alignSelf: 'stretch',
   },
-  logOutButton: { flex: 1, backgroundColor: 'black' },
-  formContainer: {
-    flexDirection: 'row',
-    height: 80,
+  gameRooms: {
+    marginTop: 20,
+    height: 48,
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: 'deepskyblue',
+    marginLeft: 30,
+    marginRight: 30,
     marginTop: 40,
     marginBottom: 20,
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    justifyContent: 'center',
+    height: 48,
+    borderRadius: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  flatListText: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderStyle: 'dashed',
   },
   input: {
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
     paddingLeft: 16,
-    flex: 1,
-    marginRight: 5,
+    alignSelf: 'stretch',
   },
-  button: {
-    height: 47,
+  select: {
+    height: 48,
     borderRadius: 5,
-    backgroundColor: '#788eec',
-    width: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  listContainer: {
-    marginTop: 20,
-    padding: 20,
-  },
-  entityContainer: {
-    marginTop: 16,
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingBottom: 16,
-  },
-  entityText: {
-    fontSize: 20,
-    color: '#333333',
+    overflow: 'hidden',
+    backgroundColor: 'azure',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
   },
 });
