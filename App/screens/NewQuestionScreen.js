@@ -85,9 +85,9 @@ export default function NewQuestionScreen(props) {
           onValueChange={(text) => setQuestionType(text)}
           label="start"
           items={[
-            { label: 'open Question', value: 'open Question' },
+            // { label: 'open Question', value: 'open Question' },
             { label: 'multiple choice', value: 'multiple choice' },
-            { label: 'closed Question', value: 'closed Question' },
+            // { label: 'closed Question', value: 'closed Question' },
           ]}
         />
 
