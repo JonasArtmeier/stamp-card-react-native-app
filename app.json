@@ -3,11 +3,8 @@
     "name": "Rooms for Feedback & Opinions",
     "description": "This Application provides 'game rooms' for all users to ask other users about their Feedback or Opinions",
     "slug": "RoomsForFeedbackAndOpinions",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
+    "permission": [],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -19,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
