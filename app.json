@@ -4,7 +4,7 @@
     "description": "This Application provides 'game rooms' for all users to ask other users about their Feedback or Opinions",
     "slug": "RoomsForFeedbackAndOpinions",
     "platforms": ["ios", "android", "web"],
-    "permission": [],
+    "permissions": [],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
