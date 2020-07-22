@@ -10,6 +10,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { firebase } from '../../src/firebase/config';
 import { useScreens } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
@@ -60,6 +61,9 @@ export default function NewQuestionScreen(props) {
               .doc(res.id)
               .update({
                 id: res.id,
+              })
+              .then(() => {
+                navigation.navigate('GameRoom');
               });
           });
       })
@@ -71,92 +75,96 @@ export default function NewQuestionScreen(props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headline}>Question type</Text>
-
-      <RNPickerSelect
-        onValueChange={(text) => setQuestionType(text)}
-        label="start"
-        items={[
-          { label: 'open Question', value: 'open Question' },
-          { label: 'multiple choice', value: 'multiple choice' },
-          { label: 'closed Question', value: 'closed Question' },
-        ]}
-      />
-
-      <Text style={styles.headline}>Your Question</Text>
-      <TextInput
-        multiline
-        style={styles.input}
-        placeholder="Your Question"
-        placeholderTextColor="#aaaaaa"
-        onChangeText={(text) => setQuestion(text)}
-        value={question}
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-      />
-      <View style={styles.container}>
-        <Text>Answer 1</Text>
-        <TextInput
-          multiline
-          style={styles.input}
-          placeholder="Answer 1"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setAnswer1(text)}
-          value={answer1}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-
-        <Text>Answer 2</Text>
-        <TextInput
-          multiline
-          style={styles.input}
-          placeholder="Answer 2"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setAnswer2(text)}
-          value={answer2}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-
-        <Text>Answer 3</Text>
-        <TextInput
-          multiline
-          style={styles.input}
-          placeholder="Answer 3"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setAnswer3(text)}
-          value={answer3}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-
-        <Text>Answer 4</Text>
-        <TextInput
-          multiline
-          style={styles.input}
-          placeholder="Answer 4"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setAnswer4(text)}
-          value={answer4}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          if (lockButton === 'locked') {
-            return;
-          }
-          navigation.navigate('GameRoom');
-          onCreateQuestion();
-        }}
+      <KeyboardAwareScrollView
+        style={{ flex: 1, width: '100%' }}
+        keyboardShouldPersistTaps="always"
       >
-        <Text style={styles.buttonText}>create question</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.headline}>Question type</Text>
 
+        <RNPickerSelect
+          onValueChange={(text) => setQuestionType(text)}
+          label="start"
+          items={[
+            { label: 'open Question', value: 'open Question' },
+            { label: 'multiple choice', value: 'multiple choice' },
+            { label: 'closed Question', value: 'closed Question' },
+          ]}
+        />
+
+        <Text style={styles.headline}>Your Question</Text>
+        <TextInput
+          multiline
+          style={styles.input}
+          placeholder="Your Question"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setQuestion(text)}
+          value={question}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <View style={styles.container}>
+          <Text>Answer 1</Text>
+          <TextInput
+            multiline
+            style={styles.input}
+            placeholder="Answer 1"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setAnswer1(text)}
+            value={answer1}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+
+          <Text>Answer 2</Text>
+          <TextInput
+            multiline
+            style={styles.input}
+            placeholder="Answer 2"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setAnswer2(text)}
+            value={answer2}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+
+          <Text>Answer 3</Text>
+          <TextInput
+            multiline
+            style={styles.input}
+            placeholder="Answer 3"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setAnswer3(text)}
+            value={answer3}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+
+          <Text>Answer 4</Text>
+          <TextInput
+            multiline
+            style={styles.input}
+            placeholder="Answer 4"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setAnswer4(text)}
+            value={answer4}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (lockButton === 'locked') {
+              return;
+            }
+            // navigation.navigate('GameRoom');
+            onCreateQuestion();
+          }}
+        >
+          <Text style={styles.buttonText}>create question</Text>
+        </TouchableOpacity>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
 
