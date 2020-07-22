@@ -31,7 +31,7 @@ export default function NewQuestionScreen(props) {
   const gameRoomId = props.route.params.myGameRoom.id;
 
   const onCreateQuestion = () => {
-    if (question && question.length <= 0) {
+    if (question === '') {
       alert('Enter a Question');
       return;
     }

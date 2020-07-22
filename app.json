@@ -1,26 +1,21 @@
 {
   "expo": {
-    "name": "stamp-card-react-native-app",
-    "slug": "stamp-card-react-native-app",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "Rooms for Feedback & Opinions",
+    "description": "This Application provides 'game rooms' for all users to ask other users about their Feedback or Opinions",
+    "slug": "RoomsForFeedbackAndOpinions",
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     }

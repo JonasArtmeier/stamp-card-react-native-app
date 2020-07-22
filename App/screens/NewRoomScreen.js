@@ -29,7 +29,7 @@ export default function NewRoomScreen(props) {
   const userID = props.extraData.id;
 
   const onCreateRoom = () => {
-    if (gameRoomName && gameRoomName.length <= 0) {
+    if (gameRoomName === '') {
       alert('Enter a name');
       return;
     }
