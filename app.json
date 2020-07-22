@@ -2,7 +2,7 @@
   "expo": {
     "name": "Feed.Me",
     "description": "This Application provides 'game rooms' for all users to ask other users about their Feedback or Opinions",
-    "slug": "Feed.Me",
+    "slug": "RoomsForFeedbackAndOpinions",
     "platforms": ["ios", "android", "web"],
 
     "version": "1.0.0",
