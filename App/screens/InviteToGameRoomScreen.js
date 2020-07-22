@@ -23,9 +23,6 @@ export default function InviteToGameRoomScreen(props) {
   const [memberIds, setMemberIds] = useState('');
   const [lockUser, setLockUser] = useState('');
   const [myGameRoomIds, setMyGameRoomIds] = useState('');
-  // const [question, setQuestion] = useState('');
-
-  // const userRef = firebase.firestore().collection('users');
 
   const userID = props.extraData.id;
   const myUserName = props.extraData.fullName;
@@ -38,9 +35,8 @@ export default function InviteToGameRoomScreen(props) {
       .collection('users')
       .get()
       .then((querySnapshot) => {
-        // const fullName = querySnapshot.docs.map((doc) => doc.data().fullName);
         const userDatas = querySnapshot.docs.map((doc) => doc.data());
-        // setUserName(fullName);
+
         setUserData(userDatas);
       });
     firebase
@@ -121,10 +117,7 @@ export default function InviteToGameRoomScreen(props) {
                       alert('User already added');
                       return;
                     }
-                    // alert(item.id)}
-                    //   // navigation.navigate('GameRoom', {
-                    //   //   myGameRoom: item,
-                    //   // })
+
                     onInviteUser(item);
                   }}
                 >
@@ -140,22 +133,6 @@ export default function InviteToGameRoomScreen(props) {
 
       <Footer />
     </View>
-    // {/* <View>
-    //   <TouchableOpacity onPress={() => logOutPress()}>
-    //     <Text>Logout</Text>
-    //   </TouchableOpacity>
-    // </View> */}
-    // {/* {entities && (
-    //   <View style={styles.listContainer}>
-    //     <FlatList
-    //       data={entities}
-    //       renderItem={renderEntity}
-    //       keyExtractor={(item) => item.id}
-    //       removeClippedSubviews={true}
-    //     /> */}
-    // {/* </View> */}
-    // {/* )} */}
-    // </View>
   );
 }
 

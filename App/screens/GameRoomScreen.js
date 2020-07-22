@@ -12,13 +12,15 @@ import {
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 import Spacer from '../components/Spacer';
-// import { useScreens } from 'react-native-screens';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import GameRooms from '../components/GameRooms';
-// import myGameRoom from '../screens/HomeScreen';
+
 
 export default function GameRoomScreen(props) {
   const isFocused = useIsFocused();
+
+/// Get the Question Data ///
+
   useEffect(() => {
     if (!isFocused) return;
     firebase
@@ -30,7 +32,6 @@ export default function GameRoomScreen(props) {
         const questionIds = querySnapshot.docs.map(
           (doc) => doc.data().questionId,
         );
-        // console.log('id', questionIds);
         firebase
           .firestore()
           .collection('questions')
@@ -51,7 +52,8 @@ export default function GameRoomScreen(props) {
   const navigation = useNavigation();
   const userID = props.extraData.id;
   const myGameRoom = props.route.params.myGameRoom;
-  console.log('final', questionData);
+
+  /// Only delete the entry in the junction table ///
   const leaveRoom = () => {
     firebase
       .firestore()
@@ -60,11 +62,19 @@ export default function GameRoomScreen(props) {
       .where('userId', '==', userID)
       .get()
       .then((snapshot) => {
-        snapshot.docs.map((doc) => doc.data().id.delete());
+        const junctionId = snapshot.docs.map((doc) => doc.data().id);
+        firebase
+          .firestore()
+          .collection('RoomMemberJunction')
+          .doc(junctionId[0])
+          .delete();
         alert('Room left');
         navigation.navigate('Home');
       });
   };
+
+  /// Delete the Room and all junction entries ///
+
   const deleteRoom = () => {
     firebase
       .firestore()
@@ -74,38 +84,6 @@ export default function GameRoomScreen(props) {
       .then((snapshot) => {
         snapshot.forEach((doc) => doc.ref.delete());
       });
-    // .get()
-    // .then((querySnapshot) => {
-    //   const roomMemberJunctionIds = querySnapshot.docs.map((doc) => doc.id);
-    //   const batch = firebase.firestore().batch();
-    //   batch.set([roomMemberJunctionIds]);
-    //   batch.delete([roomMemberJunctionIds]);
-    //   batch.commit();
-    // });
-
-    // .then((response) => {
-    //   const roomMemberJunctionIds = response.id;
-    //   console.log(roomMemberJunctionIds);
-    // .then((querySnapshot) => {
-    //   var batch = firebase.batch();
-    //   querySnapshot.forEach(function (doc) {
-    //     batch.delete(doc.ref);
-    //   });
-    // })
-    // .then(() => {
-    //   console.log('Room deleted');
-
-    // const roomMemberJunctionIds = querySnapshot.docs.map((doc) => doc.id);
-    // console.log('test', roomMemberJunctionIds);
-    // console.log('props', props.route.params.myGameRoom.id);
-    // firebase
-    //   .firestore()
-    //   .collection('RoomMemberJunction')
-    //   .doc(roomMemberJunctionIds)
-    //   .delete();
-    // .then(() => {
-    //   alert('Room deleted');
-
     firebase
       .firestore()
       .collection('gameRooms')
@@ -115,32 +93,15 @@ export default function GameRoomScreen(props) {
         alert('Room deleted');
         navigation.navigate('Home');
       });
-
-    // <== This will signout from firebase
   };
 
-  // console.log('extradata', props.route.params.myGameRoom.name);
 
   return (
     <View style={styles.container}>
       <Text style={styles.headline}>{myGameRoom.name}</Text>
       <Image style={styles.logo} source={require('../assets/logo.png')} />
       <Text style={styles.headline}>The Questions</Text>
-      {/* <View style={styles.firstBox}>
-        <Text>
-          {' '}
-          The next Question will be live at: {myGameRoom.questionStart}{' '}
-        </Text>
-      </View>
-      <View style={styles.firstBox}>
-        <Text>
-          {' '}
-          Please answer the Question until: {myGameRoom.questionEnd}{' '}
-        </Text>
-      </View>
-      <View style={styles.firstBox}>
-        <Text style={styles.buttonText}>test</Text>
-      </View> */}
+     
       <View style={styles.gameRooms}>
         <FlatList
           data={questionData}
@@ -195,7 +156,7 @@ export default function GameRoomScreen(props) {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          userID === myGameRoom.creator ? leaveRoom() : deleteRoom();
+          userID === myGameRoom.creator ? deleteRoom() : leaveRoom();
         }}
       >
         <Text style={styles.buttonText}>Delete Room</Text>

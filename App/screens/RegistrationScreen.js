@@ -32,6 +32,7 @@ export default function RegistrationScreen({ navigation }) {
           email: email,
           fullName: fullName,
         };
+
         await navigation.navigate('Registration');
         const usersRef = firebase.firestore().collection('users');
         usersRef
@@ -40,8 +41,25 @@ export default function RegistrationScreen({ navigation }) {
           .then(() => {
             navigation.navigate('Home', { user: data });
           })
+
           .catch((error) => {
             alert(error);
+          });
+        firebase
+          .firestore()
+          .collection('RoomMemberJunction')
+          .add({
+            gameRoomId: 'kQs4DqFPndCWVvx0QNnU',
+            userId: uid,
+          })
+          .then((res) => {
+            firebase
+              .firestore()
+              .collection('RoomMemberJunction')
+              .doc(res.id)
+              .update({
+                id: res.id,
+              });
           });
       })
       .catch((error) => {

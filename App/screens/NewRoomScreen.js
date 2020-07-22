@@ -25,9 +25,7 @@ export default function NewRoomScreen(props) {
   const [lockButton, setLockButton] = useState('');
   const navigation = useNavigation();
   const gameRoomRef = firebase.firestore().collection('gameRooms');
-  // const roomMemberJunctionRef = firebase
-  //   .firestore()
-  //   .colltection('RoomMemberJunction');
+
   const userID = props.extraData.id;
 
   const onCreateRoom = () => {
@@ -74,7 +72,7 @@ export default function NewRoomScreen(props) {
     <View style={styles.container}>
       <Text style={styles.headline}>Create a new Game Room</Text>
 
-      {/* <View style={styles.input}> */}
+
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -150,7 +148,7 @@ export default function NewRoomScreen(props) {
         ]}
       />
 
-      {/* </View> */}
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -165,22 +163,7 @@ export default function NewRoomScreen(props) {
 
       <Footer />
     </View>
-    // {/* <View>
-    //   <TouchableOpacity onPress={() => logOutPress()}>
-    //     <Text>Logout</Text>
-    //   </TouchableOpacity>
-    // </View> */}
-    // {/* {entities && (
-    //   <View style={styles.listContainer}>
-    //     <FlatList
-    //       data={entities}
-    //       renderItem={renderEntity}
-    //       keyExtractor={(item) => item.id}
-    //       removeClippedSubviews={true}
-    //     /> */}
-    // {/* </View> */}
-    // {/* )} */}
-    // </View>
+   
   );
 }
 

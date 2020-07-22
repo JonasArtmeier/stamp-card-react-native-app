@@ -11,13 +11,10 @@ import {
 } from 'react-native';
 import { firebase } from '../../src/firebase/config';
 import Spacer from '../components/Spacer';
-// import { useScreens } from 'react-native-screens';
+
 import { useNavigation } from '@react-navigation/native';
-// import GameRooms from '../components/GameRooms';
-// import RNRestart from 'react-native-restart';
 
 export default function QuestionScreen(props) {
-  // const navigation = useNavigation();
   const questionData = props.route.params.questionData;
   const userID = props.extraData.id;
   const [instantUserAnswer, setInstantUserAnswer] = useState('');
@@ -30,7 +27,6 @@ export default function QuestionScreen(props) {
   const allC = allAnsweres.filter((ite) => ite === 'C');
   const allD = allAnsweres.filter((ite) => ite === 'D');
   const [lockQuestion, setLockQuestion] = useState('');
-  // const myTrueAnswer = myAnswer[0].userAnswer;
 
   useEffect(() => {
     firebase
@@ -40,7 +36,6 @@ export default function QuestionScreen(props) {
       .get()
       .then((querySnapshot) => {
         const questionAnswers = querySnapshot.docs.map((doc) => doc.data());
-        // console.log('databas', querySnapshot.docs.data());
         setQuestionAnswerData(questionAnswers);
         const myAnswer = questionAnswers.filter((ite) => ite.userId === userID);
         setMyAnswerHistory(myAnswer[0].userAnswer);

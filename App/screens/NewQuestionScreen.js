@@ -25,13 +25,10 @@ export default function NewQuestionScreen(props) {
   const [lockButton, setLockButton] = useState('');
   const navigation = useNavigation();
   const questionRef = firebase.firestore().collection('questions');
-  // const roomMemberJunctionRef = firebase
-  //   .firestore()
-  //   .colltection('RoomMemberJunction');
+
   const userID = props.extraData.id;
   const gameRoomId = props.route.params.myGameRoom.id;
 
-  // console.log(gameRoomId)
   const onCreateQuestion = () => {
     if (question && question.length <= 0) {
       alert('Enter a Question');
@@ -159,22 +156,7 @@ export default function NewQuestionScreen(props) {
         <Text style={styles.buttonText}>create question</Text>
       </TouchableOpacity>
     </View>
-    // {/* <View>
-    //   <TouchableOpacity onPress={() => logOutPress()}>
-    //     <Text>Logout</Text>
-    //   </TouchableOpacity>
-    // </View> */}
-    // {/* {entities && (
-    //   <View style={styles.listContainer}>
-    //     <FlatList
-    //       data={entities}
-    //       renderItem={renderEntity}
-    //       keyExtractor={(item) => item.id}
-    //       removeClippedSubviews={true}
-    //     /> */}
-    // {/* </View> */}
-    // {/* )} */}
-    // </View>
+
   );
 }
 

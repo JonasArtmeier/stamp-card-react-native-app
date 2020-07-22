@@ -25,9 +25,7 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     if (!isFocused) return;
-    // if (HomeScreen.isFocused === props.isFocused) {
-    //   return;
-    // }
+
     firebase
       .firestore()
       .collection('RoomMemberJunction')
@@ -44,7 +42,6 @@ export default function HomeScreen(props) {
           .where('id', 'in', gameRoomIds)
           .get()
           .then((snapshot) => {
-            // console.log('snapshot', snapshot.data());
             const gameRoomsData = snapshot.docs.map((document) => {
               return document.data();
             });
@@ -52,12 +49,6 @@ export default function HomeScreen(props) {
           });
       });
   }, [userID, isFocused]);
-  // const [myGameRoom, setMyGameRoom] = useState([]);
-  // const onGameRoomPress = (item) => {
-  //   alert('haha');
-  //   navigation.navigate('GameRoom', { gameRoom: item });
-  // console.log('items Data', item);
-  // };
 
   const logOutPress = async () => {
     await firebase.auth().signOut().then(BackHandler.exitApp());
@@ -70,8 +61,6 @@ export default function HomeScreen(props) {
 
       <Text style={styles.headline}>Your Game Rooms:</Text>
       <View style={styles.gameRooms}>
-        {/* <GameRooms userID={userID} /> */}
-
         <FlatList
           data={gameRoomData}
           renderItem={({ item, index }) => (
