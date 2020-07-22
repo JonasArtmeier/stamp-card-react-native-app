@@ -52,6 +52,19 @@ export default function GameRoomScreen(props) {
   const userID = props.extraData.id;
   const myGameRoom = props.route.params.myGameRoom;
   console.log('final', questionData);
+  const leaveRoom = () => {
+    firebase
+      .firestore()
+      .collection('RoomMemberJunction')
+      .where('gameRoomId', '==', props.route.params.myGameRoom.id)
+      .where('userId', '==', userID)
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.map((doc) => doc.data().id.delete());
+        alert('Room left');
+        navigation.navigate('Home');
+      });
+  };
   const deleteRoom = () => {
     firebase
       .firestore()
@@ -179,7 +192,12 @@ export default function GameRoomScreen(props) {
       >
         <Text style={styles.buttonText}>Create a Question</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => deleteRoom()}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          userID === myGameRoom.creator ? leaveRoom() : deleteRoom();
+        }}
+      >
         <Text style={styles.buttonText}>Delete Room</Text>
       </TouchableOpacity>
     </View>
