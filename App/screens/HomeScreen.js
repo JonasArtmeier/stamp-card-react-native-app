@@ -66,10 +66,12 @@ export default function HomeScreen(props) {
           renderItem={({ item, index }) => (
             <View
               style={{
+                width: 300,
+                borderTopWidth: 1,
+                borderColor: '#CED0CE',
                 flex: 1,
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 10,
+                paddingVertical: 20,
               }}
             >
               {gameRoomData !== undefined ? (

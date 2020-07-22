@@ -15,11 +15,10 @@ import Spacer from '../components/Spacer';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import GameRooms from '../components/GameRooms';
 
-
 export default function GameRoomScreen(props) {
   const isFocused = useIsFocused();
 
-/// Get the Question Data ///
+  /// Get the Question Data ///
 
   useEffect(() => {
     if (!isFocused) return;
@@ -95,23 +94,24 @@ export default function GameRoomScreen(props) {
       });
   };
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.headline}>{myGameRoom.name}</Text>
       <Image style={styles.logo} source={require('../assets/logo.png')} />
       <Text style={styles.headline}>The Questions</Text>
-     
+
       <View style={styles.gameRooms}>
         <FlatList
           data={questionData}
           renderItem={({ item, index }) => (
             <View
               style={{
-                marginTop: 10,
+                width: 300,
+                borderTopWidth: 1,
+                borderColor: '#CED0CE',
                 flex: 1,
                 alignItems: 'center',
-                justifyContent: 'center',
+                paddingVertical: 20,
               }}
             >
               {questionData !== undefined ? (

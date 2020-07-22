@@ -19,7 +19,7 @@ export default function InviteToGameRoomScreen(props) {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const [userName, setUserName] = useState('');
-  const [userData, setUserData] = useState('');
+  const [userData, setUserData] = useState([]);
   const [memberIds, setMemberIds] = useState('');
   const [lockUser, setLockUser] = useState('');
   const [myGameRoomIds, setMyGameRoomIds] = useState('');
@@ -27,6 +27,13 @@ export default function InviteToGameRoomScreen(props) {
   const userID = props.extraData.id;
   const myUserName = props.extraData.fullName;
   const gameRoomId = props.route.params.myGameRoom.id;
+
+  /// searchbar ///
+  const [search, setSearch] = useState('');
+  const [searchData, setSearchData] = useState(userData);
+  const onSearch = (val) => {
+    setSearch(val);
+  };
 
   useEffect(() => {
     if (!isFocused) return;
@@ -96,17 +103,42 @@ export default function InviteToGameRoomScreen(props) {
       <Text style={styles.headline}>Invite a Friend </Text>
       <Image style={styles.logo} source={require('../assets/logo.png')} />
       <Text style={styles.headline}>User:</Text>
+
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        status="info"
+        placeholder="Search"
+        style={{
+          alignSelf: 'stretch',
+          marginLeft: 40,
+          marginRight: 40,
+          height: 40,
+          borderRadius: 25,
+          borderColor: 'black',
+          backgroundColor: 'azure',
+        }}
+        textStyle={{ color: 'black' }}
+        onChangeText={(val) => onSearch(val)}
+        value={search}
+      />
+
       <View style={styles.gameRooms}>
         <FlatList
-          data={userData}
+          data={userData.filter((data) => {
+            const dataLowerCase = data.fullName.toLowerCase();
+            const searchTermLowerCase = search.toLowerCase();
+            return dataLowerCase.indexOf(searchTermLowerCase) > -1;
+          })}
           renderItem={({ item, index }) => (
             <View
               style={{
-                marginTop: 10,
-                height: 50,
+                width: 300,
+                borderTopWidth: 1,
+                borderColor: '#CED0CE',
                 flex: 1,
                 alignItems: 'center',
-                justifyContent: 'center',
+                paddingVertical: 20,
               }}
             >
               {userName !== myUserName ? (
@@ -117,7 +149,6 @@ export default function InviteToGameRoomScreen(props) {
                       alert('User already added');
                       return;
                     }
-
                     onInviteUser(item);
                   }}
                 >
@@ -130,7 +161,6 @@ export default function InviteToGameRoomScreen(props) {
           )}
         />
       </View>
-
       <Footer />
     </View>
   );
